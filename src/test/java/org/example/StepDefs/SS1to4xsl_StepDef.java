@@ -7,20 +7,38 @@ import org.openqa.selenium.By;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 public class SS1to4xsl_StepDef {
-    @DataProvider(name = "GuruTest")
-    public Object[][] testData() throws Exception {
-        return Util.getDataFromExcel(Util.FILE_PATH, Util.SHEET_NAME,
-                Util.TABLE_NAME);
+    Util utilities = new Util();
+    String[][] userdata;
+
+    {
+        try {
+            userdata = utilities.testData();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
     @When("user enter valid userId")
-    public void entervaliduserid(String username){
+    public void entervaliduserid() throws IOException {
         Hooks.driver.findElement(By.name("uid")).clear();
-        Hooks.driver.findElement(By.name("uid")).sendKeys(username);
+        Hooks.driver.findElement(By.name("uid")).sendKeys(userdata[0][0]);
     }
     @And("user enter valid password")
-    public void entervalidpassword(String password){
+    public void entervalidpassword(){
         Hooks.driver.findElement(By.name("password")).clear();
-        Hooks.driver.findElement(By.name("password")).sendKeys(password);
+        Hooks.driver.findElement(By.name("password")).sendKeys(userdata[0][1]);
+    }
+    @When("user enter invalid username")
+    public void enterinvalidusername(){
+        Hooks.driver.findElement(By.name("uid")).clear();
+        Hooks.driver.findElement(By.name("uid")).sendKeys(userdata[1][0]);
+    }
+    @And("user enter invalid password")
+    public void enterinvalidpassword(){
+        Hooks.driver.findElement(By.name("password")).clear();
+        Hooks.driver.findElement(By.name("password")).sendKeys(userdata[2][1]);
     }
 }
